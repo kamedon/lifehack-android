@@ -1,3 +1,5 @@
 test:
+  pre:
+    -  cp app/gradle.properties.dust app/gradle.properties
   override:
     - ./gradlew assembleDebug
