@@ -22,13 +22,13 @@ dependencies:
     - ./gradlew dependencies
 
 test:
-  pre:
-    # start the emulator
-    - emulator -avd circleci-android22 -no-audio -no-window:
-        background: true
-        parallel: true
-    # wait for it to have booted
-    - circle-android wait-for-boot
+#  pre:
+#    # start the emulator
+#    - emulator -avd circleci-android22 -no-audio -no-window:
+#        background: true
+#        parallel: true
+#    # wait for it to have booted
+#    - circle-android wait-for-boot
   override:
     - ./gradlew test
-    - ./gradlew connectedAndroidTest
+#    - ./gradlew connectedAndroidTest
