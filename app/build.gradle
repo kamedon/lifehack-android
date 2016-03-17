@@ -73,9 +73,17 @@ dependencies {
     compile 'com.trello:rxlifecycle-kotlin:0.5.0'
 
     //test用
-    androidTestCompile "com.android.support.test:runner:0.+"
-    androidTestCompile "com.android.support.test:rules:0.+"
+    testCompile 'junit:junit:4.+'
     androidTestCompile 'com.android.support:support-annotations:23.+'
+    androidTestCompile('com.android.support.test:runner:0.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:rules:0.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.squareup.assertj:assertj-android:1.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 buildscript {
