@@ -2,10 +2,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'deploygate'
+def isCi = "true".equals(System.getenv("CI"))
+def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
+    dexOptions {
+        // Skip pre-dexing when running on CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = preDexEnabled && !isCi
+    }
 
     defaultConfig {
         applicationId "com.kamedon.todo"
@@ -38,6 +45,12 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
 
 }
 
@@ -60,9 +73,17 @@ dependencies {
     compile 'com.trello:rxlifecycle-kotlin:0.5.0'
 
     //test用
-    androidTestCompile "com.android.support.test:runner:0.+"
-    androidTestCompile "com.android.support.test:rules:0.+"
+    testCompile 'junit:junit:4.+'
     androidTestCompile 'com.android.support:support-annotations:23.+'
+    androidTestCompile('com.android.support.test:runner:0.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:rules:0.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.squareup.assertj:assertj-android:1.+') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 buildscript {
