@@ -1,4 +1,4 @@
-package todo.com.kamedon.todo
+package com.kamedon.todo
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -23,6 +23,6 @@ class ApplicationTest {
 
     @Test
     fun packageName() {
-        Assert.assertEquals(InstrumentationRegistry.getTargetContext().getPackageName(), "todo.com.kamedon.todo")
+        Assert.assertEquals(InstrumentationRegistry.getTargetContext().packageName, "com.kamedon.todo.debug")
     }
 }
