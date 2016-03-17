@@ -1,0 +1,10 @@
+buildTypes {
+    debug {
+        applicationIdSuffix '.debug'
+        debuggable true
+        versionNameSuffix "-debug"
+        zipAlignEnabled true
+        minifyEnabled false
+        signingConfig signingConfigs.debug
+    }
+}

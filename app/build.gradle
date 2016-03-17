@@ -27,34 +27,11 @@ android {
         exclude 'META-INF/LICENSE'
     }
 
-    signingConfigs {
-        release {
-            def signFile = file("@release/keystore.txt")
-            def signingProps = new Properties()
-            signingProps.load(new FileInputStream(signFile))
-            storeFile file("@release/release_keystore.jks")
-            keyAlias signingProps['KEY_ALIAS']
-            storePassword signingProps['STORE_PASSWORD']
-            keyPassword signingProps['KEY_PASSWORD']
-        }
-    }
+    apply from: 'signingConfigs/debug.gradle', to: android
+    apply from: 'signingConfigs/release.gradle', to: android
 
-    buildTypes {
-        debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix "-debug"
-            shrinkResources true
-            zipAlignEnabled true
-            minifyEnabled false
-        }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            zipAlignEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-    }
+    apply from: 'buildTypes/debug.gradle', to: android
+    apply from: 'buildTypes/release.gradle', to: android
 
 
     sourceSets {
