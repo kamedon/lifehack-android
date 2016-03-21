@@ -6,5 +6,6 @@ buildTypes {
         zipAlignEnabled true
         minifyEnabled false
         signingConfig signingConfigs.debug
+        testCoverageEnabled true
     }
 }
