@@ -29,6 +29,7 @@ import com.kamedon.todo.entity.api.NewTaskResponse
 import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.Debug
+import com.kamedon.todo.util.setupCrashlytics
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
@@ -62,6 +63,8 @@ class TaskActivity : RxAppCompatActivity() {
         setContentView(R.layout.activity_task)
         perf = UserService.createSharedPreferences(applicationContext)
         user = UserService.getUser(perf);
+        user.setupCrashlytics()
+
 
         initToolBar();
         initNavigation();

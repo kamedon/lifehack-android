@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'deploygate'
@@ -52,7 +53,6 @@ android {
     }
 
 
-
 }
 
 dependencies {
@@ -71,6 +71,16 @@ dependencies {
     compile 'com.trello:rxlifecycle:0.5.0'
     compile 'com.trello:rxlifecycle-components:0.5.0'
     compile 'com.trello:rxlifecycle-kotlin:0.5.0'
+
+    //leakcanary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.+'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.+'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.+'
+
+    // crashlytics
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
     //test用
     testCompile 'junit:junit:4.+'
@@ -94,12 +104,16 @@ buildscript {
     ext.kotlin_version = '1.0.0'
     repositories {
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 repositories {
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
