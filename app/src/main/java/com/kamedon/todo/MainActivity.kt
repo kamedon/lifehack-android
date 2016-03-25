@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.view.View
+import com.crashlytics.android.Crashlytics
 import com.kamedon.todo.builder.ApiClientBuilder
 import com.kamedon.todo.builder.TodoApiBuilder
 import com.kamedon.todo.dialog.SignUpDialog
@@ -75,6 +77,7 @@ class MainActivity : RxAppCompatActivity() {
                 }
 
                 override fun onComplete() {
+
                     val intent = buildIntent(TaskActivity::class.java)
                     intent.putExtra("user", "new");
                     startActivity(intent);
@@ -87,4 +90,5 @@ class MainActivity : RxAppCompatActivity() {
             })
         }
     }
+
 }

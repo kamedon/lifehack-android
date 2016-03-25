@@ -4,8 +4,8 @@ import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
+import com.crashlytics.android.Crashlytics
 import com.kamedon.todo.R
 import com.kamedon.todo.api.TodoApi
 import com.kamedon.todo.entity.api.Errors
@@ -13,6 +13,7 @@ import com.kamedon.todo.entity.api.NewUserQuery
 import com.kamedon.todo.entity.api.NewUserResponse
 import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
+import com.kamedon.todo.util.setupCrashlytics
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import rx.Subscriber
 
@@ -88,7 +89,11 @@ class SignUpDialog(val api: TodoApi.UserApi) {
                                     edit_username.error = errors.username?.let { it.errors[0].toString() }
                                     edit_password.error = errors.plainPassword?.let { it.errors[0].toString() }
                                 }
-                                201 -> UserService.update(UserService.createSharedPreferences(activity.applicationContext).edit(), response)
+                                201 -> {
+                                    UserService.update(UserService.createSharedPreferences(activity.applicationContext).edit(), response)
+                                    response.user.setupCrashlytics()
+                                }
+
                             }
                         }
 
