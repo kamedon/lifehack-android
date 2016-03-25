@@ -36,6 +36,7 @@ class MainActivity : RxAppCompatActivity() {
             return
         }
         setContentView(R.layout.activity_main);
+        supportActionBar?.title ="${getString(R.string.app_name)}_${BuildConfig.VERSION_NAME}"
         val client = ApiClientBuilder.createApi();
         val api = TodoApiBuilder.buildUserApi(client);
         btn_login.setOnClickListener {

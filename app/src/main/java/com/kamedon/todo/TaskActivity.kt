@@ -215,6 +215,9 @@ class TaskActivity : RxAppCompatActivity() {
         val textEmail = header.findViewById(R.id.text_email) as TextView;
         textEmail.text = user.email
 
+        val textVersion= header.findViewById(R.id.text_version) as TextView;
+        textVersion.text = BuildConfig.VERSION_NAME
+
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_logout -> {
