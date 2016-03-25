@@ -13,8 +13,6 @@ data class Task(var id: Int, var body: String, var state: String, var createdAt:
         val state_untreated = "untreated"
         //query用
         val state_all = "all"
-
-
     }
 
     fun state(resources: Resources) = when (state) {

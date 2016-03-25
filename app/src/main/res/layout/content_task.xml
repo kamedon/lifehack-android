@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,9 +15,9 @@
     <LinearLayout
         android:id="@+id/layout_register_form"
         android:layout_width="match_parent"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
@@ -32,7 +31,7 @@
                 android:hint="@string/prompt_task"
                 android:imeActionId="@+id/btn_register"
                 android:imeOptions="actionUnspecified"
-                android:maxLines="3"/>
+                android:maxLines="3" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -41,10 +40,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_mode_edit_white_24dp"/>
+            android:src="@drawable/ic_mode_edit_white_24dp" />
     </LinearLayout>
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,7 +58,7 @@
 
         </ListView>
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/empty"
@@ -68,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_register_form"
         android:layout_centerInParent="true"
-        android:text="@string/nothing_task"/>
+        android:text="@string/nothing_task" />
 
 
 </RelativeLayout>

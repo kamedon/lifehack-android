@@ -29,13 +29,13 @@ import com.kamedon.todo.entity.api.NewTaskResponse
 import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.Debug
+import com.kamedon.todo.util.setupCrashlytics
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
 import okhttp3.Response
 import rx.Subscriber
 import rx.Subscription
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -63,6 +63,8 @@ class TaskActivity : RxAppCompatActivity() {
         setContentView(R.layout.activity_task)
         perf = UserService.createSharedPreferences(applicationContext)
         user = UserService.getUser(perf);
+        user.setupCrashlytics()
+
 
         initToolBar();
         initNavigation();
@@ -164,15 +166,18 @@ class TaskActivity : RxAppCompatActivity() {
             "login" -> Snackbar.make(layout_register_form, R.string.complete_login, Snackbar.LENGTH_LONG).setAction("Action", null).show()
             "" -> Snackbar.make(layout_register_form, R.string.hello, Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
+        ptr_layout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_blue_light, android.R.color.holo_orange_light);
+        ptr_layout.setOnRefreshListener {
+            page.set(1)
+            updateList(state, 1, true);
+        }
 
-        ActionBarPullToRefresh.from(this)
-                .theseChildrenArePullable(R.id.list)
-                .listener { view ->
-                    page.set(1)
-                    updateList(state, 1, true);
-                }
-                // Finally commit the setup to our PullToRefreshLayout
-                .setup(ptr_layout);
+        //        ActionBarPullToRefresh.from(this)
+        //                .theseChildrenArePullable(R.id.list)
+        //                .listener { view ->
+        //                }
+        //                // Finally commit the setup to our PullToRefreshLayout
+        //                .setup(ptr_layout);
 
         list.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
@@ -209,6 +214,9 @@ class TaskActivity : RxAppCompatActivity() {
         textName.text = user.username
         val textEmail = header.findViewById(R.id.text_email) as TextView;
         textEmail.text = user.email
+
+        val textVersion= header.findViewById(R.id.text_version) as TextView;
+        textVersion.text = BuildConfig.VERSION_NAME
 
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -284,7 +292,7 @@ class TaskActivity : RxAppCompatActivity() {
         subscription = observable(api.list(state, page), object : Subscriber<List<Task>>() {
             override fun onCompleted() {
                 taskListAdapter.notifyDataSetChanged()
-                ptr_layout.setRefreshComplete()
+                ptr_layout.isRefreshing = true;
                 updateEmptyView();
                 if (clean) {
                     updateForm()
@@ -303,7 +311,7 @@ class TaskActivity : RxAppCompatActivity() {
             }
 
             override fun onError(e: Throwable?) {
-                ptr_layout.setRefreshComplete()
+                ptr_layout.isRefreshing = false
             }
         }) ;
     }

@@ -1,7 +1,9 @@
 package com.kamedon.todo.util
 
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.kamedon.todo.BuildConfig
+import com.kamedon.todo.entity.User
 
 object Debug {
     fun d(tag: String, msg: String) {
@@ -15,6 +17,8 @@ object Debug {
             Log.d(tag, msg, e);
         }
     }
+
+
 }
 
 fun String.logd(tag: String) {
@@ -23,4 +27,10 @@ fun String.logd(tag: String) {
 
 fun String.logd(tag: String, e: Throwable) {
     Debug.d(tag, this, e)
+}
+
+inline fun User.setupCrashlytics() {
+    Crashlytics.setUserIdentifier(id.toString());
+    Crashlytics.setUserEmail(email);
+    Crashlytics.setUserName(username);
 }

@@ -103,3 +103,13 @@
 -dontwarn android.databinding.**
 -dontwarn org.antlr.v4.**
 -dontwarn org.abego.treelayout.**
+
+#Crashlytics
+-keepattributes SourceFile,LineNumberTable,*Annotation*
+-keep public class * extends java.lang.Exception
+-printmapping mapping.txt
+
+#leakcanary
+-keep class org.eclipse.mat.** { *; }
+-keep class com.squareup.leakcanary.** { *; }
+
