@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.content_task.*
 import okhttp3.Response
 import rx.Subscriber
 import rx.Subscription
+import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -196,7 +197,11 @@ class TaskActivity : RxAppCompatActivity() {
     }
 
     private fun initApi() {
-        val client = ApiClientBuilder.createApi(UserService.getApiKey(perf).token, object : ApiClientBuilder.OnRequestListener {
+        val client = ApiClientBuilder.create(UserService.getApiKey(perf).token, object : ApiClientBuilder.OnRequestListener {
+            override fun onTimeoutListener(e: IOException) {
+                Snackbar.make(layout_register_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
+            }
+
             override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
                 UserService.deleteApiKey(perf.edit());
                 val intent = Intent(applicationContext, MainActivity::class.java)
@@ -215,7 +220,7 @@ class TaskActivity : RxAppCompatActivity() {
         val textEmail = header.findViewById(R.id.text_email) as TextView;
         textEmail.text = user.email
 
-        val textVersion= header.findViewById(R.id.text_version) as TextView;
+        val textVersion = header.findViewById(R.id.text_version) as TextView;
         textVersion.text = BuildConfig.VERSION_NAME
 
         navigationView.setNavigationItemSelectedListener {

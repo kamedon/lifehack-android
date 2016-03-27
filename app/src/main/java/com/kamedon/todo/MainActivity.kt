@@ -4,8 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.view.View
-import com.crashlytics.android.Crashlytics
 import com.kamedon.todo.builder.ApiClientBuilder
 import com.kamedon.todo.builder.TodoApiBuilder
 import com.kamedon.todo.dialog.SignUpDialog
@@ -18,7 +16,10 @@ import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.logd
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_task.*
+import okhttp3.Response
 import rx.Subscriber
+import java.io.IOException
 
 /**
  * Created by kamedon on 2/29/16.
@@ -36,8 +37,15 @@ class MainActivity : RxAppCompatActivity() {
             return
         }
         setContentView(R.layout.activity_main);
-        supportActionBar?.title ="${getString(R.string.app_name)}_${BuildConfig.VERSION_NAME}"
-        val client = ApiClientBuilder.createApi();
+        supportActionBar?.title = "${getString(R.string.app_name)}_${BuildConfig.VERSION_NAME}"
+        val client = ApiClientBuilder.create(object : ApiClientBuilder.OnRequestListener {
+            override fun onTimeoutListener(e: IOException) {
+                Snackbar.make(login_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
+            }
+
+            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
+            }
+        });
         val api = TodoApiBuilder.buildUserApi(client);
         btn_login.setOnClickListener {
             val query = LoginUserQuery(edit_username.text.toString(), edit_password.text.toString());
