@@ -8,6 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by kamedon on 2/29/16.
@@ -37,6 +38,9 @@ object ApiClientBuilder {
                     }
                     response
                 })
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .build()
 
     }
