@@ -36,6 +36,7 @@
     <string name="title_task_all">すべてのTodo一覧</string>
     <string name="title_task_untreated">未完了のToDo一覧</string>
     <string name="title_task_complete">完了のToDo一覧</string>
+    <string name="error_timeout">server: timeout</string>
 
 
 </resources>

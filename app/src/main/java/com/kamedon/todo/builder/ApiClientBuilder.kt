@@ -1,20 +1,19 @@
 package com.kamedon.todo.builder
 
-import android.util.Log
 import com.kamedon.todo.util.Debug
 import com.kamedon.todo.util.XUserAgentAuthorizationUtil
-import com.kamedon.todo.util.logd
-import okhttp3.Interceptor
-import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by kamedon on 2/29/16.
  */
 object ApiClientBuilder {
-    fun createApi(api_token: String? = null, listener: OnRequestListener? = null): OkHttpClient {
+
+    fun create(listener: OnRequestListener? = null): OkHttpClient = create(null, listener)
+    fun create(api_token: String? = null, listener: OnRequestListener? = null): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor({
                     chain ->
@@ -31,12 +30,19 @@ object ApiClientBuilder {
                     api_token?.let {
                         builder.header("Authorization", it)
                     }
-                    var response = chain.proceed(builder.build())
-                    Debug.d("okhttp", "response:${response?.toString()}")
-                    when (response?.code()) {
-                        403 -> listener?.onInvalidApiKeyOrNotFoundUser(response)
+
+                    try {
+                        var response = chain.proceed(builder.build())
+                        Debug.d("okhttp", "response:${response?.toString()}")
+                        when (response?.code()) {
+                            403 -> listener?.onInvalidApiKeyOrNotFoundUser(response)
+                        }
+                        response
+                    } catch(e: IOException) {
+                        listener?.onTimeoutListener(e)
+                        e.printStackTrace()
+                        null
                     }
-                    response
                 })
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
@@ -47,5 +53,6 @@ object ApiClientBuilder {
 
     interface OnRequestListener {
         fun onInvalidApiKeyOrNotFoundUser(response: Response);
+        fun onTimeoutListener(e: IOException);
     }
 }
