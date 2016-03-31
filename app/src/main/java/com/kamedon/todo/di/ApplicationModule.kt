@@ -18,6 +18,6 @@ class ApplicationModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun provideToast(context: Context) = Toast(context)
+    fun provideToast(context: Context) = Toast.makeText(context, "hoge", Toast.LENGTH_SHORT)
 
 }

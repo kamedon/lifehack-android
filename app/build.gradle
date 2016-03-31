@@ -90,7 +90,6 @@ dependencies {
     //test用
     testCompile 'junit:junit:4.+'
     androidTestCompile 'com.android.support:support-annotations:23.+'
-    testCompile 'junit:junit:4.12'
     testCompile('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
