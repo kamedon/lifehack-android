@@ -72,6 +72,11 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.5.0'
     compile 'com.trello:rxlifecycle-kotlin:0.5.0'
 
+    //dageer
+    compile 'com.google.dagger:dagger:2.+'
+    kapt 'com.google.dagger:dagger-compiler:2.+'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
     //leakcanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.+'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.+'
@@ -85,7 +90,6 @@ dependencies {
     //test用
     testCompile 'junit:junit:4.+'
     androidTestCompile 'com.android.support:support-annotations:23.+'
-    testCompile 'junit:junit:4.12'
     testCompile('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -100,11 +104,15 @@ dependencies {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
+
 buildscript {
-    ext.kotlin_version = '1.0.0'
+    ext.kotlin_version = '1.0.1-2'
     repositories {
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.widget.Toast
 import com.kamedon.todo.builder.ApiClientBuilder
 import com.kamedon.todo.builder.TodoApiBuilder
 import com.kamedon.todo.dialog.SignUpDialog
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.content_task.*
 import okhttp3.Response
 import rx.Subscriber
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * Created by kamedon on 2/29/16.
@@ -27,9 +29,14 @@ import java.io.IOException
 class MainActivity : RxAppCompatActivity() {
 
     lateinit var perf: SharedPreferences
+    @Inject lateinit var toast : Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as KamedonApplication).applicationModule.inject(this)
+        toast.setText("hoge")
+        toast.show()
+
         perf = UserService.createSharedPreferences(applicationContext);
         if (UserService.hasApiKey(perf)) {
             startActivity(Intent(applicationContext, TaskActivity::class.java));
