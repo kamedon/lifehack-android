@@ -1,7 +1,7 @@
 package com.kamedon.todo.builder
 
+import com.kamedon.todo.api.TodoClientConfig
 import com.kamedon.todo.util.Debug
-import com.kamedon.todo.util.XUserAgentAuthorizationUtil
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import java.io.IOException
@@ -12,24 +12,29 @@ import java.util.concurrent.TimeUnit
  */
 object ApiClientBuilder {
 
-    fun create(listener: OnRequestListener? = null): OkHttpClient = create(null, listener)
-    fun create(api_token: String? = null, listener: OnRequestListener? = null): OkHttpClient {
+    fun create(todoClientConfig: TodoClientConfig, listener: OnRequestListener? = null): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor({
                     chain ->
                     val original = chain.request()
                     val builder = original.newBuilder()
-                            .header("X-User-Agent-Authorization", XUserAgentAuthorizationUtil.token())
+                            .header("X-User-Agent-Authorization", todoClientConfig.xAgentToken())
                             .header("Accept", "application/json")
                             //.header("Content-Type", "application/x-www-form-urlencoded")
                             .header("Content-Type", "application/json")
                             .method(original.method(), original.body());
 
-                    Debug.d("okhttp", "token:${XUserAgentAuthorizationUtil.token()}")
+                    Debug.d("okhttp", "token:${todoClientConfig.xAgentToken()}")
 
-                    api_token?.let {
-                        builder.header("Authorization", it)
+                    val apiKey = todoClientConfig.userToken();
+                    Debug.d("okhttp", "user:${apiKey?.token}")
+                    apiKey?.let {
+                        if (!it.token.equals("")) {
+                            builder.header("Authorization", it.token)
+                        }
+
                     }
+                    Debug.d("okhttp", "token:set")
 
                     try {
                         var response = chain.proceed(builder.build())
@@ -39,6 +44,7 @@ object ApiClientBuilder {
                         }
                         response
                     } catch(e: IOException) {
+                        Debug.d("okhttp", "error:" + e.message)
                         listener?.onTimeoutListener(e)
                         e.printStackTrace()
                         null

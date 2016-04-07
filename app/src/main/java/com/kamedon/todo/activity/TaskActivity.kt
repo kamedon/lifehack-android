@@ -1,4 +1,4 @@
-package com.kamedon.todo
+package com.kamedon.todo.activity
 
 import android.content.Context
 import android.content.Intent
@@ -16,11 +16,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView
 import android.widget.TextView
+import com.kamedon.todo.BuildConfig
+import com.kamedon.todo.KamedonApplication
+import com.kamedon.todo.R
 import com.kamedon.todo.adapter.TaskListAdapter
 import com.kamedon.todo.anim.TaskFormAnimation
 import com.kamedon.todo.api.TodoApi
-import com.kamedon.todo.builder.ApiClientBuilder
-import com.kamedon.todo.builder.TodoApiBuilder
+import com.kamedon.todo.di.ActivityComponent
+import com.kamedon.todo.di.ActivityModule
 import com.kamedon.todo.dialog.EditTaskDialog
 import com.kamedon.todo.entity.Task
 import com.kamedon.todo.entity.User
@@ -33,22 +36,22 @@ import com.kamedon.todo.util.setupCrashlytics
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
-import okhttp3.Response
 import rx.Subscriber
 import rx.Subscription
-import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
 /**
  * Created by kamedon on 2/29/16.
  */
-class TaskActivity : RxAppCompatActivity() {
+class TaskActivity : BaseActivity() {
     lateinit var taskFormAnimation: TaskFormAnimation
 
-    lateinit var user: User
-    lateinit var api: TodoApi.TaskApi
+    var user: User? = null
+    @Inject lateinit var api: TodoApi.TaskApi
+
     lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter
     lateinit var perf: SharedPreferences
@@ -61,15 +64,15 @@ class TaskActivity : RxAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activityComponent.inject(this)
         setContentView(R.layout.activity_task)
         perf = UserService.createSharedPreferences(applicationContext)
         user = UserService.getUser(perf);
-        user.setupCrashlytics()
+        user?.setupCrashlytics()
 
 
         initToolBar();
         initNavigation();
-        initApi();
         taskFormAnimation = TaskFormAnimation(layout_register_form)
         taskFormAnimation.topMargin = resources.getDimension(R.dimen.activity_vertical_margin)
         btn_toggle_task.setOnClickListener {
@@ -196,29 +199,29 @@ class TaskActivity : RxAppCompatActivity() {
         })
     }
 
-    private fun initApi() {
-        val client = ApiClientBuilder.create(UserService.getApiKey(perf).token, object : ApiClientBuilder.OnRequestListener {
-            override fun onTimeoutListener(e: IOException) {
-                Snackbar.make(layout_register_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
-            }
-
-            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
-                UserService.deleteApiKey(perf.edit());
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent);
-                finish();
-            }
-        })
-        api = TodoApiBuilder.buildTaskApi(client)
-    }
+    //    private fun initApi() {
+    //        val client = ApiClientBuilder.create(UserService.getApiKey(perf).token, object : ApiClientBuilder.OnRequestListener {
+    //            override fun onTimeoutListener(e: IOException) {
+    //                Snackbar.make(layout_register_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
+    //            }
+    //
+    //            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
+    //                UserService.deleteApiKey(perf.edit());
+    //                val intent = Intent(applicationContext, MainActivity::class.java)
+    //                startActivity(intent);
+    //                finish();
+    //            }
+    //        })
+    //        api = TodoApiBuilder.buildTaskApi(client)
+    //    }
 
     private fun initNavigation() {
         val navigationView = findViewById(R.id.nav_view) as NavigationView;
         val header = navigationView.getHeaderView(0);
         val textName = header.findViewById(R.id.text_name) as TextView;
-        textName.text = user.username
+        textName.text = user?.username
         val textEmail = header.findViewById(R.id.text_email) as TextView;
-        textEmail.text = user.email
+        textEmail.text = user?.email
 
         val textVersion = header.findViewById(R.id.text_version) as TextView;
         textVersion.text = BuildConfig.VERSION_NAME
