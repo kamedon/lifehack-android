@@ -1,6 +1,5 @@
 package com.kamedon.todo.di
 
-import com.kamedon.todo.MainActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -10,5 +9,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
-    fun inject(activity: MainActivity)
+    fun plus(module: ActivityModule): ActivityComponent;
 }

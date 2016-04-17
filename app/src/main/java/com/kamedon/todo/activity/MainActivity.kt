@@ -1,12 +1,14 @@
-package com.kamedon.todo
+package com.kamedon.todo.activity
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.widget.Toast
-import com.kamedon.todo.builder.ApiClientBuilder
-import com.kamedon.todo.builder.TodoApiBuilder
+import com.kamedon.todo.BuildConfig
+import com.kamedon.todo.KamedonApplication
+import com.kamedon.todo.R
+import com.kamedon.todo.api.TodoApi
+import com.kamedon.todo.di.ActivityModule
 import com.kamedon.todo.dialog.SignUpDialog
 import com.kamedon.todo.entity.api.Errors
 import com.kamedon.todo.entity.api.LoginUserQuery
@@ -17,25 +19,21 @@ import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.logd
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_task.*
-import okhttp3.Response
 import rx.Subscriber
-import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by kamedon on 2/29/16.
  */
-class MainActivity : RxAppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     lateinit var perf: SharedPreferences
-    @Inject lateinit var toast : Toast
+    @Inject lateinit var userApi: TodoApi.UserApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as KamedonApplication).applicationModule.inject(this)
-        toast.setText("hoge")
-        toast.show()
+        activityComponent.inject(this)
 
         perf = UserService.createSharedPreferences(applicationContext);
         if (UserService.hasApiKey(perf)) {
@@ -45,20 +43,20 @@ class MainActivity : RxAppCompatActivity() {
         }
         setContentView(R.layout.activity_main);
         supportActionBar?.title = "${getString(R.string.app_name)}_${BuildConfig.VERSION_NAME}"
-        val client = ApiClientBuilder.create(object : ApiClientBuilder.OnRequestListener {
-            override fun onTimeoutListener(e: IOException) {
-                Snackbar.make(login_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
-            }
-
-            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
-            }
-        });
-        val api = TodoApiBuilder.buildUserApi(client);
+        //        val client = ApiClientBuilder.create(object : ApiClientBuilder.OnRequestListener {
+        //            override fun onTimeoutListener(e: IOException) {
+        //                Snackbar.make(login_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
+        //            }
+        //
+        //            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
+        //            }
+        //        });
+        //        val api = TodoApiBuilder.buildUserApi(client);
         btn_login.setOnClickListener {
             val query = LoginUserQuery(edit_username.text.toString(), edit_password.text.toString());
             val errors = query.valid(resources)
             if (errors.isEmpty()) {
-                observable(api.login(query), object : Subscriber<NewUserResponse>() {
+                observable(userApi.login(query), object : Subscriber<NewUserResponse>() {
                     override fun onCompleted() {
                         if (UserService.isLogin(perf)) {
                             val intent = buildIntent(TaskActivity::class.java)
@@ -88,7 +86,7 @@ class MainActivity : RxAppCompatActivity() {
         }
 
         btn_signIn.setOnClickListener {
-            SignUpDialog(api).show(this@MainActivity, object : SignUpDialog.OnSignUpListener {
+            SignUpDialog(userApi).show(this@MainActivity, object : SignUpDialog.OnSignUpListener {
                 override fun onInvalidQuery(errors: Errors) {
                 }
 
