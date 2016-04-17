@@ -17,14 +17,11 @@ import javax.inject.Singleton
 @Module
 class ActivityModule(val activity: Activity) {
     @Provides
+    @ActivityScope
     fun provideTodoTaskApi(okHttpClient: OkHttpClient): TodoApi.TaskApi = TodoApiBuilder.buildTaskApi(okHttpClient);
 
     @Provides
+    @ActivityScope
     fun provideTodoUserApi(okHttpClient: OkHttpClient): TodoApi.UserApi = TodoApiBuilder.buildUserApi(okHttpClient);
 
-    @Provides
-    fun provideHttpClient(todoApiConfig: TodoClientConfig) = ApiClientBuilder.create(todoApiConfig, null)
-
-    @Provides
-    fun provideHttpClientConfig(context: Context) = TodoClientConfig(context);
 }

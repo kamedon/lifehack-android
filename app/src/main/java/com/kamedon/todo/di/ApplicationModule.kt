@@ -26,4 +26,10 @@ class ApplicationModule(val application: Application) {
     @Singleton
     fun provideToast(context: Context) = Toast.makeText(context, "hoge", Toast.LENGTH_SHORT)
 
+    @Provides
+    fun provideHttpClient(todoApiConfig: TodoClientConfig) = ApiClientBuilder.create(todoApiConfig, null)
+
+    @Provides
+    fun provideHttpClientConfig(context: Context) = TodoClientConfig(context);
+
 }

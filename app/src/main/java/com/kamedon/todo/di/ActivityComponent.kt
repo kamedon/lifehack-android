@@ -12,6 +12,5 @@ import dagger.Subcomponent
 interface ActivityComponent {
     fun inject(activity: MainActivity)
     fun inject(activity: TaskActivity)
-    fun plus(activityModule: ActivityModule): ActivityComponent;
 }
 
