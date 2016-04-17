@@ -37,6 +37,8 @@
     <string name="title_task_all">ToDo All Task</string>
     <string name="title_task_untreated">ToDo Untreated Task</string>
     <string name="title_task_complete">ToDo Complete Task</string>
+    <string name="error_timeout">server: timeout</string>
+
 
 
 

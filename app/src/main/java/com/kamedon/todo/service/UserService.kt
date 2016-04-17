@@ -2,7 +2,6 @@ package com.kamedon.todo.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.gson.Gson
 import com.kamedon.todo.entity.ApiKey
 import com.kamedon.todo.entity.User
@@ -34,11 +33,12 @@ object UserService {
     }
 
     fun hasApiKey(sharedPreferences: SharedPreferences) = !sharedPreferences.getString(key_api_token, "").equals("")
-    fun getApiKey(sharedPreferences: SharedPreferences) = Gson().fromJson(sharedPreferences.getString(key_api_token, "").toString(), ApiKey::class.java)
+    fun getApiKey(sharedPreferences: SharedPreferences): ApiKey? = Gson().fromJson(sharedPreferences.getString(key_api_token, "").toString(), ApiKey::class.java)
+    fun getApiKey(context: Context) = getApiKey(createSharedPreferences(context))
     fun deleteApiKey(editor: SharedPreferences.Editor) = editor.remove(key_api_token).apply()
 
 
-    fun getUser(sharedPreferences: SharedPreferences) = Gson().fromJson(sharedPreferences.getString(key_user, "").toString(), User::class.java)
+    fun getUser(sharedPreferences: SharedPreferences): User? = Gson().fromJson(sharedPreferences.getString(key_user, "").toString(), User::class.java)
 
     fun isLogin(sharedPreferences: SharedPreferences) = hasApiKey(sharedPreferences)
 }

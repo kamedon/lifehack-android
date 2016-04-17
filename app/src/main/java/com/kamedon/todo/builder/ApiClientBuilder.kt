@@ -1,47 +1,64 @@
 package com.kamedon.todo.builder
 
-import android.util.Log
+import com.kamedon.todo.api.TodoClientConfig
 import com.kamedon.todo.util.Debug
-import com.kamedon.todo.util.XUserAgentAuthorizationUtil
-import com.kamedon.todo.util.logd
-import okhttp3.Interceptor
-import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by kamedon on 2/29/16.
  */
 object ApiClientBuilder {
-    fun createApi(api_token: String? = null, listener: OnRequestListener? = null): OkHttpClient {
+
+    fun create(todoClientConfig: TodoClientConfig, listener: OnRequestListener? = null): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor({
                     chain ->
                     val original = chain.request()
                     val builder = original.newBuilder()
-                            .header("X-User-Agent-Authorization", XUserAgentAuthorizationUtil.token())
+                            .header("X-User-Agent-Authorization", todoClientConfig.xAgentToken())
                             .header("Accept", "application/json")
                             //.header("Content-Type", "application/x-www-form-urlencoded")
                             .header("Content-Type", "application/json")
                             .method(original.method(), original.body());
 
-                    Debug.d("okhttp", "token:${XUserAgentAuthorizationUtil.token()}")
+                    Debug.d("okhttp", "token:${todoClientConfig.xAgentToken()}")
 
-                    api_token?.let {
-                        builder.header("Authorization", it)
+                    val apiKey = todoClientConfig.userToken();
+                    Debug.d("okhttp", "user:${apiKey?.token}")
+                    apiKey?.let {
+                        if (!it.token.equals("")) {
+                            builder.header("Authorization", it.token)
+                        }
+
                     }
-                    var response = chain.proceed(builder.build())
-                    Debug.d("okhttp", "response:${response?.toString()}")
-                    when (response?.code()) {
-                        403 -> listener?.onInvalidApiKeyOrNotFoundUser(response)
+                    Debug.d("okhttp", "token:set")
+
+                    try {
+                        var response = chain.proceed(builder.build())
+                        Debug.d("okhttp", "response:${response?.toString()}")
+                        when (response?.code()) {
+                            403 -> listener?.onInvalidApiKeyOrNotFoundUser(response)
+                        }
+                        response
+                    } catch(e: IOException) {
+                        Debug.d("okhttp", "error:" + e.message)
+                        listener?.onTimeoutListener(e)
+                        e.printStackTrace()
+                        null
                     }
-                    response
                 })
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .build()
 
     }
 
     interface OnRequestListener {
         fun onInvalidApiKeyOrNotFoundUser(response: Response);
+        fun onTimeoutListener(e: IOException);
     }
 }
