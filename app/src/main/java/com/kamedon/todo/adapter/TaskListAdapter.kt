@@ -1,5 +1,6 @@
 package com.kamedon.todo.adapter
 
+import android.support.v7.widget.CardView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -51,8 +52,9 @@ class TaskListAdapter(val layoutInflater: LayoutInflater, var list: MutableList<
                 Task.state_untreated
             }
             onComplete(compoundButton, item, true)
+
         }
-        layout.setOnLongClickListener { onItemLongClickListener(position, getItem(position));false }
+        holder.cardView.setOnLongClickListener { onItemLongClickListener(position, getItem(position));false }
 
         return layout
     }
@@ -63,10 +65,12 @@ class TaskListAdapter(val layoutInflater: LayoutInflater, var list: MutableList<
 private class ViewHolder(var view: View) {
     var textBody: TextView
     var checkComplete: CheckBox
+    var cardView: CardView
 
     init {
         textBody = view.findViewById(R.id.text_body) as TextView
         checkComplete = view.findViewById(R.id.checkbox_complete) as CheckBox
+        cardView = view.findViewById(R.id.card_view) as CardView
     }
 
 }
