@@ -29,6 +29,9 @@ class ApplicationModule(val application: Application) {
     @Singleton
     fun provideToast(context: Context) = Toast.makeText(context, "hoge", Toast.LENGTH_SHORT)
 
+    /*
+     * Web API関連
+     */
     @Provides
     @Singleton
     fun provideHttpClient(todoApiConfig: TodoClientConfig) = ApiClientBuilder.create(todoApiConfig, null)
@@ -45,7 +48,9 @@ class ApplicationModule(val application: Application) {
     @Singleton
     fun provideTodoUserApi(okHttpClient: OkHttpClient): TodoApi.UserApi = TodoApiBuilder.buildUserApi(okHttpClient);
 
-
+    /*
+     * Login情報
+     */
     @Provides
     @Singleton
     fun provideUserCacheable(context: Context): UserCacheable = UserCacheImpl(context)
