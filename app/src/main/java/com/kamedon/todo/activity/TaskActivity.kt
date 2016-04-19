@@ -300,7 +300,7 @@ class TaskActivity : BaseActivity() {
         subscription = observable(api.list(state, page), object : Subscriber<List<Task>>() {
             override fun onCompleted() {
                 taskListAdapter.notifyDataSetChanged()
-                ptr_layout.isRefreshing = true;
+                ptr_layout.isRefreshing = false;
                 updateEmptyView();
                 if (clean) {
                     updateForm()
