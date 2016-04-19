@@ -30,13 +30,13 @@ class MainActivity : BaseActivity() {
 
     lateinit var perf: SharedPreferences
     @Inject lateinit var userApi: TodoApi.UserApi
+    @Inject lateinit var userService: UserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
 
-        perf = UserService.createSharedPreferences(applicationContext);
-        if (UserService.hasApiKey(perf)) {
+        if (userService.hasApiKey()) {
             startActivity(Intent(applicationContext, TaskActivity::class.java));
             finish();
             return
@@ -58,7 +58,7 @@ class MainActivity : BaseActivity() {
             if (errors.isEmpty()) {
                 observable(userApi.login(query), object : Subscriber<NewUserResponse>() {
                     override fun onCompleted() {
-                        if (UserService.isLogin(perf)) {
+                        if (userService.hasApiKey()) {
                             val intent = buildIntent(TaskActivity::class.java)
                             intent.putExtra("user", "login");
                             startActivity(intent);
@@ -72,7 +72,7 @@ class MainActivity : BaseActivity() {
 
                         when (response.code) {
                             400 -> Snackbar.make(login_form, R.string.error_not_found_user, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                            200 -> UserService.update(perf.edit(), response)
+                            200 -> userService.update(response)
                         }
                     }
 
@@ -86,7 +86,7 @@ class MainActivity : BaseActivity() {
         }
 
         btn_signIn.setOnClickListener {
-            SignUpDialog(userApi).show(this@MainActivity, object : SignUpDialog.OnSignUpListener {
+            SignUpDialog(userApi, userService).show(this@MainActivity, object : SignUpDialog.OnSignUpListener {
                 override fun onInvalidQuery(errors: Errors) {
                 }
 

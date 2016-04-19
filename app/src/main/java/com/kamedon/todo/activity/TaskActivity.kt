@@ -51,10 +51,10 @@ class TaskActivity : BaseActivity() {
 
     var user: User? = null
     @Inject lateinit var api: TodoApi.TaskApi
+    @Inject lateinit var userService : UserService
 
     lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter
-    lateinit var perf: SharedPreferences
 
     var subscription: Subscription? = null
     private var next: AtomicBoolean = AtomicBoolean(true)
@@ -66,8 +66,7 @@ class TaskActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         setContentView(R.layout.activity_task)
-        perf = UserService.createSharedPreferences(applicationContext)
-        user = UserService.getUser(perf);
+        user = userService.getUser();
         user?.setupCrashlytics()
 
 
@@ -229,7 +228,7 @@ class TaskActivity : BaseActivity() {
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_logout -> {
-                    UserService.deleteApiKey(perf.edit())
+                    userService.deleteApiKey()
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     finish()
                 }

@@ -20,7 +20,7 @@ import rx.Subscriber
 /**
  * Created by h_kamei on 2016/03/02.
  */
-class SignUpDialog(val api: TodoApi.UserApi) {
+class SignUpDialog(val api: TodoApi.UserApi, val userService: UserService) {
     fun show(activity: RxAppCompatActivity, onSignUpListener: OnSignUpListener?) {
         var view = activity.layoutInflater.inflate(R.layout.dialog_sign_up, null)
         val edit_username = view.findViewById(R.id.edit_username) as EditText
@@ -76,7 +76,7 @@ class SignUpDialog(val api: TodoApi.UserApi) {
                     activity.observable(api.new(query)
                             , object : Subscriber<NewUserResponse>() {
                         override fun onCompleted() {
-                            if (UserService.isLogin(UserService.createSharedPreferences(activity.applicationContext))) {
+                            if (userService.hasApiKey()) {
                                 onSignUpListener?.onComplete()
                             }
                         }
@@ -90,7 +90,7 @@ class SignUpDialog(val api: TodoApi.UserApi) {
                                     edit_password.error = errors.plainPassword?.let { it.errors[0].toString() }
                                 }
                                 201 -> {
-                                    UserService.update(UserService.createSharedPreferences(activity.applicationContext).edit(), response)
+                                    userService.update(response)
                                     response.user.setupCrashlytics()
                                 }
 

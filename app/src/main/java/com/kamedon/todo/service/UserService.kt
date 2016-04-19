@@ -6,39 +6,16 @@ import com.google.gson.Gson
 import com.kamedon.todo.entity.ApiKey
 import com.kamedon.todo.entity.User
 import com.kamedon.todo.entity.api.NewUserResponse
+import com.kamedon.todo.infrastructure.cache.UserCacheable
+import javax.inject.Inject
 
 /**
  * Created by h_kamei on 2016/03/02.
  */
-object UserService {
-    private val key_api_token: String = "key_api_token"
-    private val key_user: String = "key_user"
+class UserService(val cache: UserCacheable) : UserCacheable by  cache {
 
-    fun createSharedPreferences(context: Context) = context.getSharedPreferences("todo_app", Context.MODE_PRIVATE)
-
-    fun update(editor: SharedPreferences.Editor, response: NewUserResponse) {
-        editor.putString(key_api_token, Gson().toJson(response.api_key))
-        editor.putString(key_user, Gson().toJson(response.user))
-        editor.apply()
+    fun update(response: NewUserResponse) {
+        cache.putLoginUser(response.user)
+        cache.putApiKey(response.api_key)
     }
-
-    fun updateApiKey(editor: SharedPreferences.Editor, apiKey: ApiKey) {
-        editor.putString(key_api_token, Gson().toJson(apiKey))
-        editor.apply();
-    }
-
-    fun updateUser(editor: SharedPreferences.Editor, user: User) {
-        editor.putString(key_user, Gson().toJson(user))
-        editor.apply();
-    }
-
-    fun hasApiKey(sharedPreferences: SharedPreferences) = !sharedPreferences.getString(key_api_token, "").equals("")
-    fun getApiKey(sharedPreferences: SharedPreferences): ApiKey? = Gson().fromJson(sharedPreferences.getString(key_api_token, "").toString(), ApiKey::class.java)
-    fun getApiKey(context: Context) = getApiKey(createSharedPreferences(context))
-    fun deleteApiKey(editor: SharedPreferences.Editor) = editor.remove(key_api_token).apply()
-
-
-    fun getUser(sharedPreferences: SharedPreferences): User? = Gson().fromJson(sharedPreferences.getString(key_user, "").toString(), User::class.java)
-
-    fun isLogin(sharedPreferences: SharedPreferences) = hasApiKey(sharedPreferences)
 }
