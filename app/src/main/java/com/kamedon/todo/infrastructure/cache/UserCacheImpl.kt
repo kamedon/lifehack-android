@@ -9,7 +9,7 @@ import com.kamedon.todo.entity.User
 /**
  * Created by h_kamei on 2016/04/19.
  */
-class UserCacheImpl(val context: Context) : UserCacheable {
+class UserCacheImpl(val context: Context) : UserCachable {
     private val key_api_token: String = "key_api_token"
     private val key_user: String = "key_user"
 
@@ -22,12 +22,12 @@ class UserCacheImpl(val context: Context) : UserCacheable {
     }
 
 
-    override fun putLoginUser(user: User) {
+    override fun save(user: User) {
         editor.putString(key_user, Gson().toJson(user))
         editor.apply();
     }
 
-    override fun putApiKey(apiKey: ApiKey) {
+    override fun save(apiKey: ApiKey) {
         editor.putString(key_api_token, Gson().toJson(apiKey))
         editor.apply();
     }

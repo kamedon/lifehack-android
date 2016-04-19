@@ -1,7 +1,7 @@
 package com.kamedon.todo.api
 
 import android.content.Context
-import com.kamedon.todo.infrastructure.cache.UserCacheable
+import com.kamedon.todo.infrastructure.cache.UserCachable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.XUserAgentAuthorizationUtil
 

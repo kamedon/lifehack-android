@@ -8,7 +8,7 @@ import com.kamedon.todo.api.TodoClientConfig
 import com.kamedon.todo.builder.ApiClientBuilder
 import com.kamedon.todo.builder.TodoApiBuilder
 import com.kamedon.todo.infrastructure.cache.UserCacheImpl
-import com.kamedon.todo.infrastructure.cache.UserCacheable
+import com.kamedon.todo.infrastructure.cache.UserCachable
 import com.kamedon.todo.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -53,10 +53,10 @@ class ApplicationModule(val application: Application) {
      */
     @Provides
     @Singleton
-    fun provideUserCacheable(context: Context): UserCacheable = UserCacheImpl(context)
+    fun provideUserCacheable(context: Context): UserCachable = UserCacheImpl(context)
 
     @Provides
     @Singleton
-    fun provideUserService(cache: UserCacheable): UserService = UserService(cache)
+    fun provideUserService(cache: UserCachable): UserService = UserService(cache)
 
 }

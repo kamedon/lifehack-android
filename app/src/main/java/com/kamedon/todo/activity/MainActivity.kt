@@ -72,7 +72,7 @@ class MainActivity : BaseActivity() {
 
                         when (response.code) {
                             400 -> Snackbar.make(login_form, R.string.error_not_found_user, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                            200 -> userService.update(response)
+                            200 -> userService.save(response)
                         }
                     }
 

@@ -90,7 +90,7 @@ class SignUpDialog(val api: TodoApi.UserApi, val userService: UserService) {
                                     edit_password.error = errors.plainPassword?.let { it.errors[0].toString() }
                                 }
                                 201 -> {
-                                    userService.update(response)
+                                    userService.save(response)
                                     response.user.setupCrashlytics()
                                 }
 
