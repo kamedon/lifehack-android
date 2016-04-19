@@ -51,10 +51,10 @@ class TaskActivity : BaseActivity() {
 
     var user: User? = null
     @Inject lateinit var api: TodoApi.TaskApi
+    @Inject lateinit var userService: UserService
 
     lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter
-    lateinit var perf: SharedPreferences
 
     var subscription: Subscription? = null
     private var next: AtomicBoolean = AtomicBoolean(true)
@@ -66,8 +66,7 @@ class TaskActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         setContentView(R.layout.activity_task)
-        perf = UserService.createSharedPreferences(applicationContext)
-        user = UserService.getUser(perf);
+        user = userService.getUser();
         user?.setupCrashlytics()
 
 
@@ -130,8 +129,6 @@ class TaskActivity : BaseActivity() {
                 override fun onComplete() {
                     val view = list.getChildAt(position);
                     taskListAdapter.getView(position, view, list);
-                    //taskListAdapter.notifyDataSetChanged()
-                    //list.invalidateViews();
                     Snackbar.make(layout_register_form, R.string.complete_edit_task, Snackbar.LENGTH_LONG).setAction("Action", null).show()
                 }
             }).show(this@TaskActivity, task)
@@ -176,19 +173,11 @@ class TaskActivity : BaseActivity() {
             updateList(state, 1, true);
         }
 
-        //        ActionBarPullToRefresh.from(this)
-        //                .theseChildrenArePullable(R.id.list)
-        //                .listener { view ->
-        //                }
-        //                // Finally commit the setup to our PullToRefreshLayout
-        //                .setup(ptr_layout);
-
         list.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
 
             }
 
-            //            AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount
             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                 val process = subscription?.isUnsubscribed ?: false
                 val isLastItemVisible = totalItemCount == list.firstVisiblePosition + visibleItemCount;
@@ -217,19 +206,16 @@ class TaskActivity : BaseActivity() {
 
     private fun initNavigation() {
         val navigationView = findViewById(R.id.nav_view) as NavigationView;
-        val header = navigationView.getHeaderView(0);
-        val textName = header.findViewById(R.id.text_name) as TextView;
-        textName.text = user?.username
-        val textEmail = header.findViewById(R.id.text_email) as TextView;
-        textEmail.text = user?.email
 
-        val textVersion = header.findViewById(R.id.text_version) as TextView;
-        textVersion.text = BuildConfig.VERSION_NAME
+        val header = navigationView.getHeaderView(0);
+        (header.findViewById(R.id.text_name) as TextView).text = user?.username;
+        (header.findViewById(R.id.text_email) as TextView).text = user?.email;
+        (header.findViewById(R.id.text_version) as TextView).text = BuildConfig.VERSION_NAME;
 
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_logout -> {
-                    UserService.deleteApiKey(perf.edit())
+                    userService.deleteApiKey()
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     finish()
                 }
@@ -239,7 +225,6 @@ class TaskActivity : BaseActivity() {
             }
             false
         }
-
     }
 
 
