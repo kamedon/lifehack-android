@@ -91,7 +91,6 @@ class MainActivity : BaseActivity() {
                 }
 
                 override fun onComplete() {
-
                     val intent = buildIntent(TaskActivity::class.java)
                     intent.putExtra("user", "new");
                     startActivity(intent);
