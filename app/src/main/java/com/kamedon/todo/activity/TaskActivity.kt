@@ -84,7 +84,7 @@ class TaskActivity : BaseActivity() {
          * Task一覧の初期化
          */
         taskListAdapter = TaskListAdapter(layoutInflater, CopyOnWriteArrayList());
-        taskListAdapter.onComplete = { view, task, complete ->
+        taskListAdapter.onChangedTaskStateComplete = { view, task, complete ->
             observable(api.edit(task.id, task.body, task.state), object : Subscriber<NewTaskResponse>() {
                 override fun onNext(response: NewTaskResponse) {
                     Log.d("response", response.toString());
@@ -103,7 +103,7 @@ class TaskActivity : BaseActivity() {
                 }
             })
         }
-        taskListAdapter.onItemLongClickListener = { position, task ->
+        taskListAdapter.onShowEditDialogListener = { position, task ->
             EditTaskDialog(api)
                     .setInputMethodManager(inputMethodManager)
                     .setOnDeleteListener(object : EditTaskDialog.OnDeleteListener {

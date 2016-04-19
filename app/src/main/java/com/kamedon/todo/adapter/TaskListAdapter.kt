@@ -5,9 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.*
 import com.kamedon.todo.R
 import com.kamedon.todo.entity.Task
 
@@ -15,8 +13,8 @@ import com.kamedon.todo.entity.Task
  * Created by kamedon on 2/29/16.
  */
 class TaskListAdapter(val layoutInflater: LayoutInflater, var list: MutableList<Task>) : BaseAdapter() {
-    var onComplete: (View, Task, Boolean) -> Unit = { view, task, complete -> }
-    var onItemLongClickListener: (Int, Task) -> Unit = { position, task -> }
+    var onChangedTaskStateComplete: (View, Task, Boolean) -> Unit = { view, task, complete -> }
+    var onShowEditDialogListener: (Int, Task) -> Unit = { position, task -> }
 
     override fun getCount(): Int {
         return list.size
@@ -51,14 +49,25 @@ class TaskListAdapter(val layoutInflater: LayoutInflater, var list: MutableList<
             } else {
                 Task.state_untreated
             }
-            onComplete(compoundButton, item, true)
+            onChangedTaskStateComplete(compoundButton, item, true)
 
         }
-        holder.cardView.setOnLongClickListener { onItemLongClickListener(position, getItem(position));false }
-
+        holder.editButton.setOnClickListener {
+            onShowEditDialogListener(position, getItem(position));
+        }
+        holder.cardView.setOnClickListener {
+            holder.editButton.visibility = if (holder.editButton.visibility == View.VISIBLE) {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
+        }
+        holder.cardView.setOnLongClickListener {
+//            Toast.makeText(parent.context,"test",Toast.LENGTH_SHORT).show()
+            true
+        }
         return layout
     }
-
 
 }
 
@@ -66,11 +75,13 @@ private class ViewHolder(var view: View) {
     var textBody: TextView
     var checkComplete: CheckBox
     var cardView: CardView
+    var editButton: View
 
     init {
         textBody = view.findViewById(R.id.text_body) as TextView
         checkComplete = view.findViewById(R.id.checkbox_complete) as CheckBox
         cardView = view.findViewById(R.id.card_view) as CardView
+        editButton = view.findViewById(R.id.btn_edit)
     }
 
 }
