@@ -7,13 +7,12 @@ import com.kamedon.todo.api.TodoApi
 import com.kamedon.todo.api.TodoClientConfig
 import com.kamedon.todo.builder.ApiClientBuilder
 import com.kamedon.todo.builder.TodoApiBuilder
-import com.kamedon.todo.infrastructure.cache.UserCacheImpl
 import com.kamedon.todo.infrastructure.cache.UserCachable
+import com.kamedon.todo.infrastructure.cache.UserCacheImpl
 import com.kamedon.todo.service.UserService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -34,7 +33,7 @@ class ApplicationModule(val application: Application) {
      */
     @Provides
     @Singleton
-    fun provideHttpClient(todoApiConfig: TodoClientConfig) = ApiClientBuilder.create(todoApiConfig, null)
+    fun provideHttpClient(todoApiConfig: TodoClientConfig) = ApiClientBuilder.create(todoApiConfig)
 
     @Provides
     @Singleton

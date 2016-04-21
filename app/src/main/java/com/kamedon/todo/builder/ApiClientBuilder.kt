@@ -2,9 +2,12 @@ package com.kamedon.todo.builder
 
 import com.kamedon.todo.api.TodoClientConfig
 import com.kamedon.todo.util.Debug
+import com.kamedon.todo.value.okhttp.OkHttp3Error
+import com.kamedon.todo.value.okhttp.OkHttp3ErrorEvent
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import org.greenrobot.eventbus.EventBus
 import java.io.IOException
+import java.net.ConnectException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -12,7 +15,7 @@ import java.util.concurrent.TimeUnit
  */
 object ApiClientBuilder {
 
-    fun create(todoClientConfig: TodoClientConfig, listener: OnRequestListener? = null): OkHttpClient {
+    fun create(todoClientConfig: TodoClientConfig): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor({
                     chain ->
@@ -40,12 +43,16 @@ object ApiClientBuilder {
                         var response = chain.proceed(builder.build())
                         Debug.d("okhttp", "response:${response?.toString()}")
                         when (response?.code()) {
-                            403 -> listener?.onInvalidApiKeyOrNotFoundUser(response)
+                            403 -> EventBus.getDefault().post(OkHttp3ErrorEvent(OkHttp3Error.InvalidApiKeyOrNotFoundUser, null))
                         }
                         response
+                    } catch(e: ConnectException) {
+                        EventBus.getDefault().post(OkHttp3ErrorEvent(OkHttp3Error.ConnectException, e))
+                        e.printStackTrace()
+                        null
                     } catch(e: IOException) {
-                        Debug.d("okhttp", "error:" + e.message)
-                        listener?.onTimeoutListener(e)
+//                        Debug.d("okhttp", "error:" + e.message)
+                        EventBus.getDefault().post(OkHttp3ErrorEvent(OkHttp3Error.Timeout, e))
                         e.printStackTrace()
                         null
                     }
@@ -57,8 +64,8 @@ object ApiClientBuilder {
 
     }
 
-    interface OnRequestListener {
-        fun onInvalidApiKeyOrNotFoundUser(response: Response);
-        fun onTimeoutListener(e: IOException);
-    }
+    //    interface OnRequestListener {
+    //        fun onInvalidApiKeyOrNotFoundUser(response: Response);
+    //        fun onTimeoutListener(e: IOException);
+    //    }
 }

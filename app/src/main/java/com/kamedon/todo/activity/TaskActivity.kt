@@ -28,10 +28,15 @@ import com.kamedon.todo.entity.api.NewTaskResponse
 import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.Debug
+import com.kamedon.todo.util.logd
 import com.kamedon.todo.util.setupCrashlytics
+import com.kamedon.todo.value.okhttp.OkHttp3ErrorEvent
 import com.kamedon.todo.value.user.LoginUserType
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import rx.Subscriber
 import rx.Subscription
 import java.util.concurrent.CopyOnWriteArrayList
@@ -184,6 +189,16 @@ class TaskActivity : BaseActivity() {
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
     //    private fun initApi() {
     //        val client = ApiClientBuilder.create(UserService.getApiKey(perf).token, object : ApiClientBuilder.OnRequestListener {
     //            override fun onTimeoutListener(e: IOException) {
@@ -322,6 +337,10 @@ class TaskActivity : BaseActivity() {
             empty.visibility = View.GONE
             layout_register_form.visibility = View.GONE
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) fun onEvent(event: OkHttp3ErrorEvent) {
+        event.error.msg().logd("http:error:")
     }
 
 }
