@@ -18,7 +18,7 @@ object ApiClientBuilder {
                     chain ->
                     val original = chain.request()
                     val builder = original.newBuilder()
-                            .header("X-User-Agent-Authorization", todoClientConfig.xAgentToken())
+                            .header(todoClientConfig.xAgentKey(), todoClientConfig.xAgentToken())
                             .header("Accept", "application/json")
                             //.header("Content-Type", "application/x-www-form-urlencoded")
                             .header("Content-Type", "application/json")
