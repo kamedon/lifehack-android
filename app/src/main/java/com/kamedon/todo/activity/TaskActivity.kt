@@ -2,7 +2,6 @@ package com.kamedon.todo.activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -17,13 +16,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView
 import android.widget.TextView
 import com.kamedon.todo.BuildConfig
-import com.kamedon.todo.KamedonApplication
 import com.kamedon.todo.R
 import com.kamedon.todo.adapter.TaskListAdapter
 import com.kamedon.todo.anim.TaskFormAnimation
 import com.kamedon.todo.api.TodoApi
-import com.kamedon.todo.di.ActivityComponent
-import com.kamedon.todo.di.ActivityModule
 import com.kamedon.todo.dialog.EditTaskDialog
 import com.kamedon.todo.entity.Task
 import com.kamedon.todo.entity.User
@@ -33,7 +29,7 @@ import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.Debug
 import com.kamedon.todo.util.setupCrashlytics
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity
+import com.kamedon.todo.value.user.LoginUserType
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
 import rx.Subscriber
@@ -162,10 +158,10 @@ class TaskActivity : BaseActivity() {
                 edit_task.error = errors["task"]
             }
         }
-        when (intent?.extras?.getString("user", "") ?: "") {
-            "new" -> Snackbar.make(layout_register_form, R.string.welcome, Snackbar.LENGTH_LONG).setAction("Action", null).show()
-            "login" -> Snackbar.make(layout_register_form, R.string.complete_login, Snackbar.LENGTH_LONG).setAction("Action", null).show()
-            "" -> Snackbar.make(layout_register_form, R.string.hello, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+        when (intent?.extras?.getSerializable(LoginUserType.key()) as? LoginUserType ?: LoginUserType.ALREADY) {
+            LoginUserType.NEW -> Snackbar.make(layout_register_form, R.string.welcome, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            LoginUserType.LOGIN -> Snackbar.make(layout_register_form, R.string.complete_login, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            LoginUserType.ALREADY -> Snackbar.make(layout_register_form, R.string.hello, Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
         ptr_layout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_blue_light, android.R.color.holo_orange_light);
         ptr_layout.setOnRefreshListener {
