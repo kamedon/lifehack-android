@@ -158,7 +158,7 @@ class TaskActivity : BaseActivity() {
                 edit_task.error = errors["task"]
             }
         }
-        when (intent?.extras?.getSerializable("user") as? LoginUserType ?: LoginUserType.ALREADY) {
+        when (intent?.extras?.getSerializable(LoginUserType.key()) as? LoginUserType ?: LoginUserType.ALREADY) {
             LoginUserType.NEW -> Snackbar.make(layout_register_form, R.string.welcome, Snackbar.LENGTH_LONG).setAction("Action", null).show()
             LoginUserType.LOGIN -> Snackbar.make(layout_register_form, R.string.complete_login, Snackbar.LENGTH_LONG).setAction("Action", null).show()
             LoginUserType.ALREADY -> Snackbar.make(layout_register_form, R.string.hello, Snackbar.LENGTH_LONG).setAction("Action", null).show()

@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
                     override fun onCompleted() {
                         if (userService.hasApiKey()) {
                             val intent = buildIntent(TaskActivity::class.java)
-                            intent.putExtra("user", LoginUserType.LOGIN);
+                            intent.putExtra(LoginUserType.key(), LoginUserType.LOGIN);
                             startActivity(intent);
                             finish()
                         }
@@ -89,7 +89,7 @@ class MainActivity : BaseActivity() {
 
                 override fun onComplete() {
                     val intent = buildIntent(TaskActivity::class.java)
-                    intent.putExtra("user", LoginUserType.NEW);
+                    intent.putExtra(LoginUserType.key(), LoginUserType.NEW);
                     startActivity(intent);
                     finish();
                 }

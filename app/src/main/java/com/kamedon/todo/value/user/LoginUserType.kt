@@ -5,4 +5,8 @@ package com.kamedon.todo.value.user
  */
 enum class LoginUserType {
     NEW, LOGIN, ALREADY ;
+
+    companion object {
+        fun key() = "login"
+    }
 }
