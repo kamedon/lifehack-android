@@ -11,10 +11,11 @@ import com.kamedon.todo.dialog.SignUpDialog
 import com.kamedon.todo.entity.api.Errors
 import com.kamedon.todo.entity.api.LoginUserQuery
 import com.kamedon.todo.entity.api.NewUserResponse
-import com.kamedon.todo.extension.buildIntent
+import com.kamedon.todo.extension.go
 import com.kamedon.todo.extension.observable
 import com.kamedon.todo.service.UserService
 import com.kamedon.todo.util.logd
+import com.kamedon.todo.value.page.Page
 import com.kamedon.todo.value.user.LoginUserType
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Subscriber
@@ -56,9 +57,9 @@ class MainActivity : BaseActivity() {
                 observable(userApi.login(query), object : Subscriber<NewUserResponse>() {
                     override fun onCompleted() {
                         if (userService.hasApiKey()) {
-                            val intent = buildIntent(TaskActivity::class.java)
-                            intent.putExtra(LoginUserType.key(), LoginUserType.LOGIN);
-                            startActivity(intent);
+                            go(Page.TASK_ALL) {
+                                it.putExtra(LoginUserType.key(), LoginUserType.LOGIN);
+                            }
                             finish()
                         }
 
@@ -88,10 +89,10 @@ class MainActivity : BaseActivity() {
                 }
 
                 override fun onComplete() {
-                    val intent = buildIntent(TaskActivity::class.java)
-                    intent.putExtra(LoginUserType.key(), LoginUserType.NEW);
-                    startActivity(intent);
-                    finish();
+                    go(Page.TASK_ALL) {
+                        it.putExtra(LoginUserType.key(), LoginUserType.NEW);
+                    }
+                    finish()
                 }
 
                 override fun onError(e: Throwable?) {
