@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -87,7 +86,7 @@ class TaskActivity : BaseActivity() {
         taskListAdapter.onChangedTaskStateComplete = { view, task, complete ->
             observable(api.edit(task.id, task.body, task.state), object : Subscriber<NewTaskResponse>() {
                 override fun onNext(response: NewTaskResponse) {
-                    Log.d("response", response.toString());
+                    Debug.d("response", response.toString());
                     if (!state.equals(response.task.state) && !state.equals(Task.state_all) ) {
                         taskListAdapter.list.remove(task)
                     }
@@ -99,7 +98,7 @@ class TaskActivity : BaseActivity() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    Log.d("response", e.toString());
+                    Debug.d("response", e.toString());
                 }
             })
         }
@@ -156,7 +155,7 @@ class TaskActivity : BaseActivity() {
 
                     override fun onError(e: Throwable?) {
 
-                        Log.d("api", "ng:" + e?.message);
+                        Debug.d("api", "ng:" + e?.message);
                     }
                 }) ;
             } else {
