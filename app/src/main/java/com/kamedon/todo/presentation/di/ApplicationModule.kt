@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import com.kamedon.todo.domain.api.ApiClientBuilder
-import com.kamedon.todo.domain.api.TodoApiBuilder
 import com.kamedon.todo.domain.api.TodoApi
+import com.kamedon.todo.domain.api.TodoApiBuilder
 import com.kamedon.todo.domain.api.TodoClientConfig
 import com.kamedon.todo.infra.repository.UserCachable
 import com.kamedon.todo.infra.repository.UserCacheImpl
@@ -57,5 +57,6 @@ class ApplicationModule(val application: Application) {
     @Provides
     @Singleton
     fun provideUserService(cache: UserCachable): UserService = UserService(cache)
+
 
 }

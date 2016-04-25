@@ -6,12 +6,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import com.kamedon.todo.R
-import com.kamedon.todo.domain.api.TodoApi
 import com.kamedon.todo.domain.entity.api.Errors
 import com.kamedon.todo.domain.entity.api.NewUserQuery
 import com.kamedon.todo.domain.entity.api.NewUserResponse
+import com.kamedon.todo.domain.usecase.user.UserRegisterUserCase
 import com.kamedon.todo.util.extension.observable
-import com.kamedon.todo.infra.repository.UserService
 import com.kamedon.todo.util.setupCrashlytics
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import rx.Subscriber
@@ -19,7 +18,7 @@ import rx.Subscriber
 /**
  * Created by h_kamei on 2016/03/02.
  */
-class SignUpDialog(val api: TodoApi.UserApi, val userService: UserService) {
+class SignUpDialog(val userRegisterUserCase: UserRegisterUserCase) {
     fun show(activity: RxAppCompatActivity, onSignUpListener: OnSignUpListener?) {
         var view = activity.layoutInflater.inflate(R.layout.dialog_sign_up, null)
         val edit_username = view.findViewById(R.id.edit_username) as EditText
@@ -72,10 +71,9 @@ class SignUpDialog(val api: TodoApi.UserApi, val userService: UserService) {
                 val query = NewUserQuery(edit_username.text.toString(), edit_email.text.toString(), edit_password.text.toString());
                 val error = query.valid(activity.resources)
                 if (error.isEmpty()) {
-                    activity.observable(api.new(query)
-                            , object : Subscriber<NewUserResponse>() {
+                    activity.observable(userRegisterUserCase.signUp(query), object : Subscriber<NewUserResponse>() {
                         override fun onCompleted() {
-                            if (userService.hasApiKey()) {
+                            if (userRegisterUserCase.isLogined()) {
                                 onSignUpListener?.onComplete()
                             }
                         }
@@ -89,7 +87,7 @@ class SignUpDialog(val api: TodoApi.UserApi, val userService: UserService) {
                                     edit_password.error = errors.plainPassword?.let { it.errors[0].toString() }
                                 }
                                 201 -> {
-                                    userService.save(response)
+                                    userRegisterUserCase.complate(response)
                                     response.user.setupCrashlytics()
                                 }
 

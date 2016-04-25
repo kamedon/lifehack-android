@@ -49,6 +49,6 @@ data class NewUserQuery(val username: String, val email: String, val plainPasswo
  */
 data class NewUserResponse(val code: Int, val user: User, val api_key: ApiKey, val message: String, val errors: Errors) : Serializable
 
-data class Errors(val username: Error, val email: Error?, val plainPassword: Error?, val other: Error?) : Serializable
+data class Errors(val username: Error?, val email: Error?, val plainPassword: Error?, val other: Error?) : Serializable
 data class Error(val errors: List<String>) : Serializable
 
