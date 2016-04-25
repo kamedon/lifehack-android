@@ -3,7 +3,7 @@ package com.kamedon.todo.util
 import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.kamedon.todo.BuildConfig
-import com.kamedon.todo.entity.User
+import com.kamedon.todo.domain.entity.User
 
 object Debug {
     fun d(tag: String, msg: String) {
