@@ -23,6 +23,7 @@ android {
         versionCode 3
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_KEY", "\"${X_USER_AGENT_AUTHORIZATION_KEY}\"")
         buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_TOKEN", "\"${X_USER_AGENT_AUTHORIZATION_TOKEN}\"")
         buildConfigField("int", "PAGE_LIMIT", "20")
         buildConfigField("String", "TODO_API_BASE_URL", "\"${TODO_API_BASE_URL}\"")
