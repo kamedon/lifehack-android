@@ -12,6 +12,7 @@ class LoginUseCase(val userApi: TodoApi.UserApi, val userRepository: UserReposit
     fun isLogined(): Boolean = userRepository.hasApiKey()
 
     fun login(query: LoginUserQuery) = userApi.login(query)
+
     fun login(response: NewUserResponse) {
         userRepository.save(response.user)
         userRepository.save(response.api_key)

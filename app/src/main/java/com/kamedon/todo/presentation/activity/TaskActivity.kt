@@ -16,12 +16,12 @@ import android.widget.AbsListView
 import android.widget.TextView
 import com.kamedon.todo.BuildConfig
 import com.kamedon.todo.R
-import com.kamedon.todo.domain.api.TodoApi
 import com.kamedon.todo.domain.entity.Task
 import com.kamedon.todo.domain.entity.User
 import com.kamedon.todo.domain.entity.api.NewTaskQuery
 import com.kamedon.todo.domain.entity.api.NewTaskResponse
-import com.kamedon.todo.domain.usecase.user.LogoutUserCase
+import com.kamedon.todo.domain.usecase.task.TaskUserCase
+import com.kamedon.todo.domain.usecase.user.LogoutUseCase
 import com.kamedon.todo.domain.value.event.okhttp.OkHttp3ErrorEvent
 import com.kamedon.todo.domain.value.login.LoginType
 import com.kamedon.todo.infra.repository.UserRepository
@@ -48,18 +48,24 @@ import javax.inject.Inject
  * Created by kamedon on 2/29/16.
  */
 class TaskActivity : BaseActivity() {
-    @Inject lateinit var logoutUseCase: LogoutUserCase
+    /*
+     *UseCase
+     */
+    @Inject lateinit var logoutUseCase: LogoutUseCase
+    @Inject lateinit var userRepository: UserRepository
+    @Inject lateinit var taskUserCase: TaskUserCase
 
     lateinit var taskFormAnimation: TaskFormAnimation
 
     var user: User? = null
-    @Inject lateinit var api: TodoApi.TaskApi
-    @Inject lateinit var userService: UserRepository
 
     lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter
 
     var subscription: Subscription? = null
+    /*
+     * list表示で使用する
+     */
     private var next: AtomicBoolean = AtomicBoolean(true)
 
     private var page: AtomicInteger = AtomicInteger(1);
@@ -69,7 +75,7 @@ class TaskActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         setContentView(R.layout.activity_task)
-        user = userService.getUser();
+        user = userRepository.getUser();
         user?.setupCrashlytics()
 
 
@@ -87,7 +93,8 @@ class TaskActivity : BaseActivity() {
          */
         taskListAdapter = TaskListAdapter(layoutInflater, CopyOnWriteArrayList());
         taskListAdapter.onChangedTaskStateComplete = { view, task, complete ->
-            observable(api.edit(task.id, task.body, task.state), object : Subscriber<NewTaskResponse>() {
+
+            observable(taskUserCase.edit(task), object : Subscriber<NewTaskResponse>() {
                 override fun onNext(response: NewTaskResponse) {
                     Debug.d("response", response.toString());
                     if (!state.equals(response.task.state) && !state.equals(Task.state_all) ) {
@@ -106,7 +113,7 @@ class TaskActivity : BaseActivity() {
             })
         }
         taskListAdapter.onShowEditDialogListener = { position, task ->
-            EditTaskDialog(api)
+            EditTaskDialog(taskUserCase)
                     .setInputMethodManager(inputMethodManager)
                     .setOnDeleteListener(object : EditTaskDialog.OnDeleteListener {
                         override fun onDelete(task: Task) {
@@ -144,7 +151,7 @@ class TaskActivity : BaseActivity() {
             val query = NewTaskQuery(edit_task.text.toString())
             val errors = query.valid(resources)
             if (errors.isEmpty()) {
-                observable(api.new(query), object : Subscriber<NewTaskResponse>() {
+                observable(taskUserCase.new(query), object : Subscriber<NewTaskResponse>() {
                     override fun onCompleted() {
                         edit_task.setText("")
                         taskListAdapter.notifyDataSetChanged()
@@ -295,7 +302,7 @@ class TaskActivity : BaseActivity() {
     }
 
     private fun updateList(state: String, page: Int, clean: Boolean) {
-        subscription = observable(api.list(state, page), object : Subscriber<List<Task>>() {
+        subscription = observable(taskUserCase.list(state, page), object : Subscriber<List<Task>>() {
             override fun onCompleted() {
                 taskListAdapter.notifyDataSetChanged()
                 ptr_layout.isRefreshing = false;
