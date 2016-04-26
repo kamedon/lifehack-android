@@ -31,4 +31,5 @@ test:
 #    - circle-android wait-for-boot
   override:
     - ./gradlew test
+    - ./gradlew assembleRelease
 #    - ./gradlew connectedAndroidTest
