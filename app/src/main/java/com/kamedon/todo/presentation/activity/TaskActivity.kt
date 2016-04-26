@@ -23,7 +23,7 @@ import com.kamedon.todo.domain.entity.api.NewTaskQuery
 import com.kamedon.todo.domain.entity.api.NewTaskResponse
 import com.kamedon.todo.domain.value.event.okhttp.OkHttp3ErrorEvent
 import com.kamedon.todo.domain.value.login.LoginType
-import com.kamedon.todo.infra.repository.UserService
+import com.kamedon.todo.infra.repository.UserRepository
 import com.kamedon.todo.presentation.adapter.TaskListAdapter
 import com.kamedon.todo.presentation.anim.TaskFormAnimation
 import com.kamedon.todo.presentation.dialog.EditTaskDialog
@@ -51,7 +51,7 @@ class TaskActivity : BaseActivity() {
 
     var user: User? = null
     @Inject lateinit var api: TodoApi.TaskApi
-    @Inject lateinit var userService: UserService
+    @Inject lateinit var userService: UserRepository
 
     lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter

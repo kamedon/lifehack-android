@@ -6,7 +6,7 @@ import com.kamedon.todo.domain.entity.User
 /**
  * Created by h_kamei on 2016/04/19.
  */
-interface UserCachable {
+interface UserRepository {
     fun hasApiKey() : Boolean
 
     fun save(user: User)

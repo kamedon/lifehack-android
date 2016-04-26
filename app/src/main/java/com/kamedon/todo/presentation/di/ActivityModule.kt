@@ -4,7 +4,7 @@ import android.app.Activity
 import com.kamedon.todo.domain.api.TodoApi
 import com.kamedon.todo.domain.usecase.user.LoginUseCase
 import com.kamedon.todo.domain.usecase.user.UserRegisterUserCase
-import com.kamedon.todo.infra.repository.UserService
+import com.kamedon.todo.infra.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 
@@ -16,10 +16,10 @@ class ActivityModule(val activity: Activity) {
 
     @Provides
     @ActivityScope
-    fun provideLoginUseCase(userApi: TodoApi.UserApi, userService: UserService) = LoginUseCase(userApi, userService)
+    fun provideLoginUseCase(userApi: TodoApi.UserApi, userRepository: UserRepository) = LoginUseCase(userApi, userRepository)
 
     @Provides
     @ActivityScope
-    fun provideUserRegisterUseCase(userApi: TodoApi.UserApi, userService: UserService) = UserRegisterUserCase(userApi, userService)
+    fun provideUserRegisterUseCase(userApi: TodoApi.UserApi, userRepository: UserRepository) = UserRegisterUserCase(userApi, userRepository)
 
 }

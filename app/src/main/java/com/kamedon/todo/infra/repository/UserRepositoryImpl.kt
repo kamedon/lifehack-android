@@ -9,7 +9,7 @@ import com.kamedon.todo.domain.entity.User
 /**
  * Created by h_kamei on 2016/04/19.
  */
-class UserCacheImpl(val context: Context) : UserCachable {
+class UserRepositoryImpl(val context: Context) : UserRepository {
     private val key_api_token: String = "key_api_token"
     private val key_user: String = "key_user"
 

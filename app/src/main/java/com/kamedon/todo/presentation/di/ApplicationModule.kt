@@ -7,9 +7,8 @@ import com.kamedon.todo.domain.api.ApiClientBuilder
 import com.kamedon.todo.domain.api.TodoApi
 import com.kamedon.todo.domain.api.TodoApiBuilder
 import com.kamedon.todo.domain.api.TodoClientConfig
-import com.kamedon.todo.infra.repository.UserCachable
-import com.kamedon.todo.infra.repository.UserCacheImpl
-import com.kamedon.todo.infra.repository.UserService
+import com.kamedon.todo.infra.repository.UserRepository
+import com.kamedon.todo.infra.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -37,7 +36,7 @@ class ApplicationModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun provideHttpClientConfig(userService: UserService) = TodoClientConfig(userService);
+    fun provideHttpClientConfig(userService: UserRepository) = TodoClientConfig(userService);
 
     @Provides
     @Singleton
@@ -52,11 +51,6 @@ class ApplicationModule(val application: Application) {
      */
     @Provides
     @Singleton
-    fun provideUserCacheable(context: Context): UserCachable = UserCacheImpl(context)
-
-    @Provides
-    @Singleton
-    fun provideUserService(cache: UserCachable): UserService = UserService(cache)
-
+    fun provideUserCacheable(context: Context): UserRepository = UserRepositoryImpl(context)
 
 }

@@ -1,7 +1,6 @@
 package com.kamedon.todo.presentation.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import com.kamedon.todo.BuildConfig
@@ -26,7 +25,6 @@ import javax.inject.Inject
  */
 class MainActivity : BaseActivity() {
 
-    lateinit var perf: SharedPreferences
     @Inject lateinit var loginUseCame: LoginUseCase
     @Inject lateinit var userRegisterUserCase: UserRegisterUserCase
 
