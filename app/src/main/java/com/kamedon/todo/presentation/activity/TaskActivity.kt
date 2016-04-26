@@ -55,11 +55,16 @@ class TaskActivity : BaseActivity() {
     @Inject lateinit var userRepository: UserRepository
     @Inject lateinit var taskUserCase: TaskUserCase
 
-    lateinit var taskFormAnimation: TaskFormAnimation
+    val inputMethodManager: InputMethodManager by lazy {
+        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager;
+    }
 
+    val taskFormAnimation: TaskFormAnimation by lazy {
+        val animation = TaskFormAnimation(layout_register_form)
+        animation.topMargin = resources.getDimension(R.dimen.activity_vertical_margin)
+        animation
+    }
     var user: User? = null
-
-    lateinit var inputMethodManager: InputMethodManager
     lateinit var taskListAdapter: TaskListAdapter
 
     var subscription: Subscription? = null
@@ -78,15 +83,11 @@ class TaskActivity : BaseActivity() {
         user = userRepository.getUser();
         user?.setupCrashlytics()
 
-
         initToolBar();
         initNavigation();
-        taskFormAnimation = TaskFormAnimation(layout_register_form)
-        taskFormAnimation.topMargin = resources.getDimension(R.dimen.activity_vertical_margin)
         btn_toggle_task.setOnClickListener {
             taskFormAnimation.toggle();
         }
-        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager;
 
         /*
          * Task一覧の初期化

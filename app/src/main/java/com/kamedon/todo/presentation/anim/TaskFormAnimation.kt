@@ -1,7 +1,6 @@
 package com.kamedon.todo.presentation.anim
 
 import android.animation.Animator
-import android.util.Log
 import android.view.View
 
 /**
