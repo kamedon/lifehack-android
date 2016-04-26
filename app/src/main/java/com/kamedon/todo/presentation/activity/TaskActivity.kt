@@ -21,6 +21,7 @@ import com.kamedon.todo.domain.entity.Task
 import com.kamedon.todo.domain.entity.User
 import com.kamedon.todo.domain.entity.api.NewTaskQuery
 import com.kamedon.todo.domain.entity.api.NewTaskResponse
+import com.kamedon.todo.domain.usecase.user.LogoutUserCase
 import com.kamedon.todo.domain.value.event.okhttp.OkHttp3ErrorEvent
 import com.kamedon.todo.domain.value.login.LoginType
 import com.kamedon.todo.infra.repository.UserRepository
@@ -47,6 +48,8 @@ import javax.inject.Inject
  * Created by kamedon on 2/29/16.
  */
 class TaskActivity : BaseActivity() {
+    @Inject lateinit var logoutUseCase: LogoutUserCase
+
     lateinit var taskFormAnimation: TaskFormAnimation
 
     var user: User? = null
@@ -225,7 +228,7 @@ class TaskActivity : BaseActivity() {
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_logout -> {
-                    userService.deleteApiKey()
+                    logoutUseCase.logout()
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     finish()
                 }
