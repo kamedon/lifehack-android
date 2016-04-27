@@ -25,7 +25,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_KEY", "\"${X_USER_AGENT_AUTHORIZATION_KEY}\"")
         buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_TOKEN", "\"${X_USER_AGENT_AUTHORIZATION_TOKEN}\"")
-        buildConfigField("int", "PAGE_LIMIT", "20")
+        buildConfigField("int", "PAGE_LIMIT", "${PAGE_LIMIT}")
         buildConfigField("String", "TODO_API_BASE_URL", "\"${TODO_API_BASE_URL}\"")
     }
 

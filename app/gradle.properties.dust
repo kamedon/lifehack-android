@@ -1,3 +1,4 @@
 X_USER_AGENT_AUTHORIZATION_KEY = X-User-Agent-Authorization
 X_USER_AGENT_AUTHORIZATION_TOKEN = token
 TODO_API_BASE_URL = http://hoge.api.com
+PAGE_LIMIT = 20
