@@ -21,7 +21,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 3
-        versionName "1.1.0"
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_KEY", "\"${X_USER_AGENT_AUTHORIZATION_KEY}\"")
         buildConfigField("String", "X_USER_AGENT_AUTHORIZATION_TOKEN", "\"${X_USER_AGENT_AUTHORIZATION_TOKEN}\"")
@@ -79,9 +79,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.+'
 
     //dageer
-    compile 'com.google.dagger:dagger:2.2'
-    kapt 'com.google.dagger:dagger-compiler:2.2'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger:2.4'
+    kapt 'com.google.dagger:dagger-compiler:2.4'
 
     //leakcanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.+'
