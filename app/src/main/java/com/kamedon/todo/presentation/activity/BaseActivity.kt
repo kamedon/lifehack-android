@@ -15,7 +15,7 @@ open class BaseActivity : RxAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var mainApplication = application as KamedonApplication;
-        activityComponent = mainApplication.applicationComponent.plus(ActivityModule(this));
+        activityComponent = mainApplication.applicationComponent.activityComponent(ActivityModule());
     }
 
 }

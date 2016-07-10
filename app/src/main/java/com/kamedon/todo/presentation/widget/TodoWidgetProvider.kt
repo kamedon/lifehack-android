@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 import com.kamedon.todo.R
 
@@ -13,6 +14,8 @@ import com.kamedon.todo.R
  * Created by kamei.hidetoshi on 2016/07/09.
  */
 class TodoWidgetProvider : AppWidgetProvider() {
+
+
     companion object {
         fun pushWidgetUpdate(context: Context, remoteViews: RemoteViews) {
             var myWidget = ComponentName(context, TodoWidgetProvider::class.java);
@@ -25,22 +28,21 @@ class TodoWidgetProvider : AppWidgetProvider() {
             intent.action = "UPDATE_WIDGET";
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
+
+        val TAG = "TodoWidgetProvider"
     }
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager?, appWidgetIds: IntArray?) {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        var remoteViews = RemoteViews(context.packageName, R.layout.widget_layout);
 
-        // ボタンイベントを登録
-//        remoteViews.setOnClickPendingIntent(R.id.button, clickButton(context));
-
-        // テキストフィールドに"初期画面"と表示
-        remoteViews.setTextViewText(R.id.title, "初期画面");
-
-        // アップデートメソッド呼び出し
-        pushWidgetUpdate(context, remoteViews);
+        Log.d(TAG, "=====onUpdate[Widget]====")
+        appWidgetIds.forEach {
+            val remoteViewsFactoryIntent = Intent(context, TodoWidgetService::class.java);
+            val rv = RemoteViews(context.packageName, R.layout.widget_layout);
+            rv.setRemoteAdapter(R.id.list, remoteViewsFactoryIntent);
+            appWidgetManager.updateAppWidget(it, rv);
+        }
     }
 
-    // アップデート
 
 }

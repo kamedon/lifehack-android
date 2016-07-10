@@ -52,6 +52,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_todo" />
         </receiver>
+
+        <service
+            android:name=".presentation.widget.TodoWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>
