@@ -26,6 +26,11 @@ class TodoWidgetService : RemoteViewsService() {
             var text = list[position]
             val rv = RemoteViews(packageName, R.layout.widget_todolist_row)
             rv.setTextViewText(R.id.text, text)
+            val intent = Intent();
+//            intent.putExtra(Memo.ID, memo.getId());
+            rv.setOnClickFillInIntent(R.id.container, intent);
+
+
             return rv
         }
 

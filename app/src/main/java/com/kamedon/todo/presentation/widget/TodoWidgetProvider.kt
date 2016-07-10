@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.kamedon.todo.R
 
 /**
@@ -29,6 +30,10 @@ class TodoWidgetProvider : AppWidgetProvider() {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
+        val ACTION_ITEM_CLICK = "com.kamedon.todo..ACTION_ITEM_CLICK"
+        val ACTION_CLICK = "com.kamedon.todo.ACTION_CLICK"
+
+
         val TAG = "TodoWidgetProvider"
     }
 
@@ -40,8 +45,33 @@ class TodoWidgetProvider : AppWidgetProvider() {
             val remoteViewsFactoryIntent = Intent(context, TodoWidgetService::class.java);
             val rv = RemoteViews(context.packageName, R.layout.widget_layout);
             rv.setRemoteAdapter(R.id.list, remoteViewsFactoryIntent);
+            val itemClickIntent = Intent(context, TodoWidgetProvider::class.java);
+            itemClickIntent.action = ACTION_ITEM_CLICK;
+            val itemClickPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    0,
+                    itemClickIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            rv.setPendingIntentTemplate(R.id.list, itemClickPendingIntent);
+
             appWidgetManager.updateAppWidget(it, rv);
         }
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        when (intent.action) {
+            ACTION_CLICK -> {
+                Toast.makeText(context,"ACTION_CLICK",Toast.LENGTH_SHORT).show()
+            }
+            ACTION_ITEM_CLICK -> {
+                Toast.makeText(context,"ACTION_ITEM_CLICK",Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+            }
+        }
+
     }
 
 
