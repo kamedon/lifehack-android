@@ -15,3 +15,5 @@ inline fun <T> ActivityLifecycleProvider.observable(observable: Observable<T>, s
         this.observable(observable).subscribe(subscriber)
 
 
+
+
