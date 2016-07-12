@@ -1,6 +1,5 @@
 package com.kamedon.todo.presentation.di
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import com.kamedon.todo.domain.api.ApiClientBuilder
@@ -18,10 +17,10 @@ import javax.inject.Singleton
  * Created by kamedon on 3/31/16.
  */
 @Module
-class ApplicationModule(val application: Application) {
+class ApplicationModule(val application: Context) {
     @Provides
     @Singleton
-    fun provideApplicationContext(): Context = application.applicationContext
+    fun provideApplicationContext(): Context = application
 
     @Provides
     @Singleton

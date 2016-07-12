@@ -1,6 +1,5 @@
 package com.kamedon.todo.presentation.di
 
-import android.app.Activity
 import com.kamedon.todo.domain.api.TodoApi
 import com.kamedon.todo.domain.usecase.task.TaskUserCase
 import com.kamedon.todo.domain.usecase.user.LoginUseCase
@@ -14,7 +13,7 @@ import dagger.Provides
  * Created by kamedon on 4/3/16.
  */
 @Module
-class ActivityModule(val activity: Activity) {
+class ActivityModule() {
 
     /*
      * UserUseCase
