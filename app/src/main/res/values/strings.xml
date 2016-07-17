@@ -38,6 +38,7 @@
     <string name="title_task_untreated">ToDo Untreated Task</string>
     <string name="title_task_complete">ToDo Complete Task</string>
     <string name="error_timeout">server: timeout</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 
 

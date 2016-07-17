@@ -39,10 +39,11 @@ class TodoWidgetService : RemoteViewsService() {
                 return null;
             }
 
-            var text = tasks[position]
+            var task = tasks[position]
             val rv = RemoteViews(packageName, R.layout.widget_todolist_row)
-            rv.setTextViewText(R.id.text, text.body)
+            rv.setTextViewText(R.id.text, task.body)
             val intent = Intent()
+            intent.putExtra("task", task)
             rv.setOnClickFillInIntent(R.id.container, intent)
             return rv
         }
@@ -60,7 +61,7 @@ class TodoWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
-            taskUserCase.list(Task.state_all, 1)
+            taskUserCase.list(Task.state_untreated, 1)
                     .subscribe(object : Observer<List<Task>> {
                         override fun onError(e: Throwable) {
                         }
@@ -85,7 +86,7 @@ class TodoWidgetService : RemoteViewsService() {
         }
 
         override fun getCount(): Int {
-            Log.d("Widget", "getCount"+tasks.size);
+            Log.d("Widget", "getCount" + tasks.size);
             return tasks.size
         }
 
