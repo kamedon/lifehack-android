@@ -13,6 +13,7 @@ import com.kamedon.todo.domain.usecase.user.UserRegisterUserCase
 import com.kamedon.todo.domain.value.login.LoginType
 import com.kamedon.todo.domain.value.page.Page
 import com.kamedon.todo.presentation.dialog.SignUpDialog
+import com.kamedon.todo.util.WidgetUtil
 import com.kamedon.todo.util.extension.go
 import com.kamedon.todo.util.extension.observable
 import com.kamedon.todo.util.logd
@@ -39,15 +40,6 @@ class MainActivity : BaseActivity() {
         }
         setContentView(R.layout.activity_main);
         supportActionBar?.title = "${getString(R.string.app_name)}_${BuildConfig.VERSION_NAME}"
-        //        val client = ApiClientBuilder.create(object : ApiClientBuilder.OnRequestListener {
-        //            override fun onTimeoutListener(e: IOException) {
-        //                Snackbar.make(login_form, R.string.error_timeout, Snackbar.LENGTH_LONG).show();
-        //            }
-        //
-        //            override fun onInvalidApiKeyOrNotFoundUser(response: Response) {
-        //            }
-        //        });
-        //        val api = TodoApiBuilder.buildUserApi(client);
         btn_login.setOnClickListener {
             val query = LoginUserQuery(edit_username.text.toString(), edit_password.text.toString());
             val errors = query.valid(resources)
@@ -69,7 +61,11 @@ class MainActivity : BaseActivity() {
 
                         when (response.code) {
                             400 -> Snackbar.make(login_form, R.string.error_not_found_user, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                            200 -> loginUseCame.login(response)
+                            200 -> {
+                                loginUseCame.login(response)
+                                WidgetUtil.update(applicationContext)
+                            }
+
                         }
                     }
 

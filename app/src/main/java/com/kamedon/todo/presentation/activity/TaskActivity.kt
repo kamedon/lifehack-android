@@ -29,6 +29,7 @@ import com.kamedon.todo.presentation.adapter.TaskListAdapter
 import com.kamedon.todo.presentation.anim.TaskFormAnimation
 import com.kamedon.todo.presentation.dialog.EditTaskDialog
 import com.kamedon.todo.util.Debug
+import com.kamedon.todo.util.WidgetUtil
 import com.kamedon.todo.util.extension.observable
 import com.kamedon.todo.util.logd
 import com.kamedon.todo.util.setupCrashlytics
@@ -106,6 +107,7 @@ class TaskActivity : BaseActivity() {
 
                 override fun onCompleted() {
                     taskListAdapter.notifyDataSetChanged()
+                    WidgetUtil.update(applicationContext)
                 }
 
                 override fun onError(e: Throwable?) {
@@ -128,6 +130,7 @@ class TaskActivity : BaseActivity() {
                             updateEmptyView();
                             taskListAdapter.notifyDataSetChanged()
                             Snackbar.make(layout_register_form, R.string.complete_delete_task, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                            WidgetUtil.update(applicationContext)
                         }
 
                     }).setOnEditListener(object : EditTaskDialog.OnEditListener {
@@ -141,6 +144,7 @@ class TaskActivity : BaseActivity() {
                     val view = list.getChildAt(position);
                     taskListAdapter.getView(position, view, list);
                     Snackbar.make(layout_register_form, R.string.complete_edit_task, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                    WidgetUtil.update(applicationContext)
                 }
             }).show(this@TaskActivity, task)
         }
@@ -158,6 +162,7 @@ class TaskActivity : BaseActivity() {
                         taskListAdapter.notifyDataSetChanged()
                         updateEmptyView();
                         Snackbar.make(view, R.string.complete_register_task, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                        WidgetUtil.update(applicationContext)
                     }
 
                     override fun onNext(response: NewTaskResponse) {
