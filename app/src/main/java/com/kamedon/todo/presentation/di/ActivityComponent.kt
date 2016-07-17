@@ -2,6 +2,7 @@ package com.kamedon.todo.presentation.di
 
 import com.kamedon.todo.presentation.activity.MainActivity
 import com.kamedon.todo.presentation.activity.TaskActivity
+import com.kamedon.todo.presentation.activity.TaskEditDialogActivity
 import dagger.Subcomponent
 
 /**
@@ -12,5 +13,6 @@ import dagger.Subcomponent
 interface ActivityComponent {
     fun inject(activity: MainActivity)
     fun inject(activity: TaskActivity)
+    fun inject(activity: TaskEditDialogActivity)
 }
 

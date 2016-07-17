@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'deploygate'
 def isCi = "true".equals(System.getenv("CI"))
 //def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
