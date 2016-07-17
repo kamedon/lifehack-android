@@ -5,12 +5,27 @@
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <TextView
-        style="@style/TextAppearance.AppCompat.Title"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:gravity="center_vertical"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/title_task_untreated" />
+        android:layout_marginBottom="@dimen/margin_small"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/title_task_untreated" />
+
+        <ImageButton
+            android:id="@+id/btn_register"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_add_white_36dp" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/list"
