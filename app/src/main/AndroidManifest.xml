@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kamedon.todo">
+    package="com.kamedon.todo" >
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,41 +11,28 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a16fc7afab3290b79bb3644d9f284c6e4d70cdd6" />
 
         <activity
             android:name=".presentation.activity.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".presentation.activity.TaskActivity"
             android:label="@string/title_task_untreated"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <receiver android:name=".presentation.widget.TodoWidgetProvider">
+        <receiver android:name=".presentation.widget.TodoWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_todo" />
-        </receiver>
-        <receiver
-            android:name=".presentation.widget.TodoWidgetReceiver"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="UPDATE_WIDGET" />
             </intent-filter>
 
             <meta-data
