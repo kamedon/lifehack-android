@@ -60,7 +60,7 @@ class TodoWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
-            taskUserCase.list(Task.state_all, 1)
+            taskUserCase.list(Task.state_untreated, 1)
                     .subscribe(object : Observer<List<Task>> {
                         override fun onError(e: Throwable) {
                         }
