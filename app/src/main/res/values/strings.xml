@@ -26,7 +26,7 @@
     <string name="task_all">All</string>
     <string name="action_logout">Logout</string>
     <string name="title_sign_up">Sign Up</string>
-    <string name="title_edit_task">ToD1o…</string>
+    <string name="title_edit_task">ToDo…</string>
     <string name="action_edit">edit</string>
     <string name="action_delete">delete</string>
     <string name="nothing_task">Nothing</string>
@@ -38,9 +38,5 @@
     <string name="title_task_untreated">ToDo Untreated Task</string>
     <string name="title_task_complete">ToDo Complete Task</string>
     <string name="error_timeout">server: timeout</string>
-    <string name="title_activity_main2">Main2Activity</string>
-
-
-
 
 </resources>
