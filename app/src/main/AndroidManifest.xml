@@ -33,6 +33,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.kamedon.todo.ACTION_TASK_REGISTER" />
+                <action android:name="com.kamedon.todo.ACTION_START_APP" />
             </intent-filter>
 
             <meta-data

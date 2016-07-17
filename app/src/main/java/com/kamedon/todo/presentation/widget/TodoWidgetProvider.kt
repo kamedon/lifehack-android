@@ -12,6 +12,7 @@ import com.kamedon.todo.R
 import com.kamedon.todo.domain.entity.Task
 import com.kamedon.todo.domain.entity.api.NewTaskResponse
 import com.kamedon.todo.domain.usecase.task.TaskUserCase
+import com.kamedon.todo.presentation.activity.MainActivity
 import com.kamedon.todo.presentation.activity.TaskEditDialogActivity
 import com.kamedon.todo.presentation.di.ActivityModule
 import com.kamedon.todo.presentation.di.ApplicationComponent
@@ -36,6 +37,7 @@ class TodoWidgetProvider : AppWidgetProvider() {
         val TAG = "TodoWidgetProvider"
         val ACTION_ITEM_CLICK = "com.kamedon.todo..ACTION_ITEM_CLICK"
         val ACTION_CLICK = "com.kamedon.todo.ACTION_TASK_REGISTER"
+        val ACTION_TITLE_CLICK = "com.kamedon.todo.ACTION_START_APP"
     }
 
 
@@ -62,6 +64,11 @@ class TodoWidgetProvider : AppWidgetProvider() {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, it);
             val itemRegisterPendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             rv.setOnClickPendingIntent(R.id.btn_register, itemRegisterPendingIntent);
+
+            val intentTitle = Intent(ACTION_TITLE_CLICK)
+            intentTitle.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, it);
+            val titlePendingIntent = PendingIntent.getBroadcast(context, 0, intentTitle, PendingIntent.FLAG_UPDATE_CURRENT)
+            rv.setOnClickPendingIntent(R.id.textTitle, titlePendingIntent);
 
             appWidgetManager.updateAppWidget(it, rv);
         }
@@ -102,6 +109,16 @@ class TodoWidgetProvider : AppWidgetProvider() {
                                 e.printStackTrace()
                             }
                         })
+            }
+            ACTION_TITLE_CLICK -> {
+                val i = Intent(context, MainActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                val pendingIntent = PendingIntent.getActivity(context, 0, i, 0)
+                try {
+                    pendingIntent.send()
+                } catch (e: PendingIntent.CanceledException) {
+                    e.printStackTrace()
+                }
             }
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
                 updateView(context)
