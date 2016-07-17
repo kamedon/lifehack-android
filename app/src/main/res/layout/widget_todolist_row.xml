@@ -11,11 +11,20 @@
     android:paddingRight="@dimen/list_horizontal_margin"
     android:paddingTop="@dimen/list_vertical_margin">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="@dimen/margin_small"
+        android:src="@android:drawable/checkbox_off_background" />
+
     <TextView
         android:id="@+id/text"
         style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:textColor="@color/text_color" />
 
 </LinearLayout>
